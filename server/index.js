@@ -6,7 +6,8 @@ const pool = require("./db");
 const router = require("./routes/router");
 PORT = process.env.PORT || 5000;
 
-app.use(corse());
+app.use(cors());
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(router);
