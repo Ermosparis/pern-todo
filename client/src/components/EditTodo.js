@@ -2,6 +2,21 @@ import React, { Fragment, useState } from "react";
 
 const EditTodo = ({ todo }) => {
   const [description, setDescription] = useState(todo.description);
+
+  const onClickSaveChanges = async (e) => {
+    e.preventDefault();
+    try {
+      const body = { description };
+      await fetch(`http://localhost:5000/todos/${todo.todo_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      window.location = "/";
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <Fragment>
       <button
@@ -19,6 +34,9 @@ const EditTodo = ({ todo }) => {
         tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
+        onClick={() => {
+          setDescription(todo.description);
+        }}
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -31,23 +49,34 @@ const EditTodo = ({ todo }) => {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={() => {
+                  setDescription(todo.description);
+                }}
               ></button>
             </div>
             <div className="modal-body">
               <input
                 type="text"
                 className="form-control"
-                defaultValue={description}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-warning">
+              <button
+                type="button"
+                className="btn btn-warning"
+                onClick={(e) => onClickSaveChanges(e)}
+              >
                 Save changes
               </button>
               <button
                 type="button"
                 className="btn btn-danger"
                 data-bs-dismiss="modal"
+                onClick={() => {
+                  setDescription(todo.description);
+                }}
               >
                 Close
               </button>
